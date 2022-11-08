@@ -1,0 +1,8 @@
+pandas
+numpy
+nltk
+gensim
+lyricsgenius
+spotify
+request
+boto3
