@@ -8,7 +8,7 @@ from lyrics.config import *
 import requests
 
 
-# TODO: concurrent 적용(비동기처리 필요)
+# TODO: concurrent 적용(시간 오래걸림)
 # TODO: 엘라스틱서치 업로드
 
 
@@ -68,7 +68,7 @@ class GeniusDataOpenSearch:
 
     def get_artist_alb_songs(self, artist_info: defaultdict) -> List:
         artist_songs = self.genius.artist_songs(
-            artist_info["artist_id"], per_page=1, page=1, sort='popularity'  # 개발용으로 숫자 설정
+            artist_info["artist_id"], per_page=10, page=1, sort='popularity'  # 개발용으로 숫자 설정
         )  # pagenation이 귀찮아서 perpage 수를 늘리는 쪽으로... 최대limit 있음(아마100)
 
         for song in artist_songs["songs"]:
@@ -98,11 +98,11 @@ def parse_args():
         description='Pass artist id --start_artist_id, --end_artist_id',
     )
     parser.add_argument('--start_artist_id', default=1)
-    parser.add_argument('--end_artist_id', default=30)
-    parser.add_argument('--token_by', default="hoseung")
+    parser.add_argument('--end_artist_id', default=100)
+    parser.add_argument('--token_by', default="jp")
     return parser.parse_args()
 
 
 if __name__ == "__main__":
     args = parse_args()
-    GeniusDataOpenSearch(args).run(1, 10)
+    GeniusDataOpenSearch(args).run()
