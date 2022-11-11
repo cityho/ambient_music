@@ -6,3 +6,4 @@ lyricsgenius
 spotify
 request
 boto3
+dotenv
