@@ -5,6 +5,7 @@ import os
 
 import moviepy.editor as moviepy
 
+
 def run(args: argparse.Namespace):
     file_path = args.folder_path
     os.chdir(file_path)

@@ -45,7 +45,7 @@ class InfoCollector:
         ply_info['playlist_snapshot_id'] = items['snapshot_id']  # ? 이건 뭔지 모르겠어요
 
         if items["tracks"]["total"] > items["tracks"]["limit"]:
-            print(f"호승아~ 잡혔다~ 플레이리스트 {ply_id}")
+            print(f"확인해보면 좋은 케이스 플레이리스트 {ply_id}")
 
         track_infos: List = items["tracks"]["items"]
 
@@ -77,10 +77,8 @@ class InfoCollector:
     def run(self):
         for k, v in self.parsed_list.items():
             self.buffer += self.get_playlist_track(v)
-            push_to_aws_queue(self.buffer, "song_id")
-            self.buffer = []  # initialize
-        # push_to_aws_queue(self.buffer, "song_id")
-        # self.buffer = []  # initialize
+        push_to_aws_queue(self.buffer)
+        self.buffer = []  # initialize
 
 
 if __name__ == "__main__":
