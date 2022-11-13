@@ -20,5 +20,3 @@ DOWNLOADPLAYLIST = {
     "Feelin' Good": "https://open.spotify.com/playlist/37i9dQZF1DX9XIFQuFvzM4?si=e4d821d267d94e6e",
     "Mega Hit Max": "https://open.spotify.com/playlist/37i9dQZF1DXbYM3nMM0oPk"
 }
-
-# genius lyrics
