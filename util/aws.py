@@ -8,14 +8,14 @@ from util.config import *
 import pdb
 
 
-def upload_to_elastic_search(buffer):
+def upload_to_elastic_search(buffer, id_key):
 
     if len(buffer) == 0:
         return
     
     data = ""
     for x in buffer:
-        idx = {"index": {"_id": x["song_id"]}}
+        idx = {"index": {"_id": x[id_key]}}
         idx = {
             "index": {
                 "_id": x["song_id"]

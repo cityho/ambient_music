@@ -7,3 +7,6 @@ spotify
 request
 boto3
 dotenv
+spotify_dl
+spotdl
+ffmpeg
