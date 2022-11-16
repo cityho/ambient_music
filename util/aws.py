@@ -4,6 +4,7 @@ import json
 import requests
 import pdb
 import boto3
+import s3fs
 
 from util.config import *
 
@@ -56,40 +57,10 @@ def push_to_aws_queue(buffer):
         queue.send_messages(Entries=chunk)
 
 
-
-# TODO :SQS 에서 GET 하고 ELASTICSEARCH 연동
-#     sqs = boto3.resource("sqs")
-#     queue = sqs.get_queue_by_name(QueueName="hoseung2-naver_news")
-#
-#     while True:  # QUEUEQ가 바닥이 날 때까지
-#         print("[{}] Fetching news".format(dt.datetime.now()), end="", flush=True)
-#         messages = queue.receive_messages(
-#             MessageAttributeNames=["All"],
-#             MaxNumberOfMessages=10,
-#             WaitTimeSeconds=1  # 큐가 비어 있는 상황에서 다음 메시지 들어올 때 까지의 대기 시간
-#         )
-#
-#         if len(messages) == 0:
-#             print("-Queue is empty wait for a while.")
-#             time.sleep(60)
-#             continue
-#
-#         for msg in messages:
-#             # 큐에서 빼내라는 의미, 이렇게 해야 큐에서 삭제하고 크롤러가 동시에 작업될 수 있다.
-#             msg.delete()
-#
-#         buffer = []
-#         # 속도 개선을 위해 두개로 나눕니다.
-#         for msg in messages:
-#             print(".", end="", flush=True)
-#             try:
-#                 entry = fetch_news_contents(msg)
-#             except:
-#                 continue
-#
-#             if entry is not None:
-#                 buffer.append(entry)
-#
-#         upload_to_elastic_search(buffer)
-#         print("!!")
-#         time.sleep(3)
+def upload_folder_to_s3(from_local, to_s3):
+    # 개별 dir을 업로드 하는 코드
+    # ex) s3_path = "bucket_name/dir_path"
+    s3_file = s3fs.S3FileSystem(
+        key=AWS_ACCESS_KEY, secret=AWS_SECRET_ACCESS_KEY
+    )
+    s3_file.put(from_local, to_s3, recursive=True)
