@@ -10,3 +10,4 @@ dotenv
 spotify_dl
 spotdl
 ffmpeg
+bs4
