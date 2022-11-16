@@ -11,3 +11,4 @@ spotify_dl
 spotdl
 ffmpeg
 bs4
+s3fs
