@@ -2,15 +2,12 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv(
-    dotenv_path="music_crawler/.spotify_env"
+    dotenv_path=".spotify_env"
 )
 
 # spotify
-# SPOTIPY_CLIENT_ID = os.getenv('SPOTIPY_CLIENT_ID')
-# SPOTIPY_CLIENT_SECRET = os.getenv('SPOTIPY_CLIENT_SECRET')
-SPOTIPY_CLIENT_ID = "821c9bdeb2a449918d1210c3ffdcd486"
-SPOTIPY_CLIENT_SECRET = "fbba67e6de334f2da2180f1d2a6480d2"
-
+SPOTIPY_CLIENT_ID = os.getenv('SPOTIPY_CLIENT_ID')
+SPOTIPY_CLIENT_SECRET = os.getenv('SPOTIPY_CLIENT_SECRET')
 
 DOWNLOADPLAYLIST = {
     "This is Norah Jones": "https://open.spotify.com/playlist/37i9dQZF1DZ06evO1A8iR2",

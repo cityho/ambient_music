@@ -24,12 +24,6 @@ class InfoCollector:
 
         self.buffer = []
 
-    def search_playlist(self):
-        q = ""
-        print("test")
-        self.sp.search(q, type="playlist")
-        return
-
     def parse_id(self, url: str):
         return url.split("/")[-1]
 
@@ -65,6 +59,13 @@ class InfoCollector:
             if t["video_thumbnail"]["url"] is not None:
                 track_dict["video_img_url"] = t["video_thumbnail"]["url"]
 
+            audio = self.sp.audio_features(track_dict["song_id"])[0]
+            audio = {k: v for k, v in audio.items() if k in [
+                'danceability', 'energy', 'key', 'loudness', 'mode',
+                'speechiness', 'acousticness', 'instrumentalness', 'liveness', 'valence',
+                'tempo', 'time_signature']
+            }
+            track_dict.update(audio)
             track_dict.update(ply_info)
 
             entry = {  # sqs에 넣기 위한 규칙
