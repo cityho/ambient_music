@@ -29,6 +29,12 @@ def scrape_lyrics(msg):
     assert len(containers) == 1, Exception("가사가 여러개로 탐지되는 경우")
 
     lyrics = containers[0].get_text(separator="\n")
+    try:
+        if len(lyrics) == 0:
+            print("here")
+    except:
+        print("here")
+
 
     item["lyrics"] = lyrics
     return item
