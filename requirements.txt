@@ -12,3 +12,4 @@ spotdl
 ffmpeg
 bs4
 s3fs
+transformers

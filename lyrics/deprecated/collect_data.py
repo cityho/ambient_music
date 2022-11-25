@@ -4,7 +4,7 @@ from collections import defaultdict
 from typing import Dict, List
 import time
 from lyricsgenius import Genius
-from lyrics.config import *
+from lyrics.deprecated.config import *
 import requests
 import traceback
 
