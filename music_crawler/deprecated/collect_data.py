@@ -1,14 +1,17 @@
+import boto3
+import json
 import argparse
 import operator
 from collections import defaultdict
 from typing import Dict, List
 import time
+from datetime import datetime
 from lyricsgenius import Genius
-from lyrics.deprecated.config import *
+from music_crawler.deprecated.config_lg import *
 import requests
 import traceback
 
-from util.opensearch import upload_to_elastic_search
+from util.aws import upload_to_elastic_search
 
 
 class GeniusDataOpenSearch:
@@ -17,7 +20,7 @@ class GeniusDataOpenSearch:
         self.start = int(args.start_artist_id)
         self.end = int(args.end_artist_id)
         self.token_by = args.token_by
-        self.genius = Genius(ACCESS_TOKEN[self.token_by], timeout=15)
+        self.genius = Genius(ACCESS_TOKEN[self.token_by], timeout=30)
 
         # 에러 발생시 계속 돌아갈 대체 토큰
         self.possible_token = [k for k in ACCESS_TOKEN.keys() if k != self.token_by]
@@ -117,6 +120,40 @@ class GeniusDataOpenSearch:
             res_list.append(res)
         return res_list
 
+    def run_missing_lyrics(self):
+        with open("no_lyrics.json", "r") as st_json:
+            missing_lyrics = json.load(st_json)
+
+        no_final = []
+
+        try:
+            for song_dict in missing_lyrics:
+                try:
+                    s = self.genius.search_song(
+                        title=song_dict["song_name"], artist=song_dict["artist_name"], get_full_info=False
+                    ).to_dict()
+                    song_dict['lyrics'] = s['lyrics']
+                    time.sleep(2)
+                except AttributeError:
+                    no_final.append(song_dict)
+
+                self.data_to_update.append(song_dict)
+                upload_to_elastic_search(
+                    self.data_to_update, "song_id"
+                )
+                time.sleep(3)
+                self.data_to_update = []
+        except:
+            upload_to_elastic_search(
+                self.data_to_update, "song_id"
+            )
+            time.sleep(3)
+            self.data_to_update = []
+
+        with open("really_no_final.json", "w") as st_json:
+            json.dump(no_final, st_json)
+
+
 
 def parse_args():
     parser = argparse.ArgumentParser(
@@ -133,4 +170,4 @@ def parse_args():
 
 if __name__ == "__main__":
     args = parse_args()
-    GeniusDataOpenSearch(args).run()
+    GeniusDataOpenSearch(args).run_missing_lyrics()

@@ -4,7 +4,7 @@ nltk
 gensim
 lyricsgenius
 spotify
-request
+requests
 boto3
 dotenv
 spotify_dl
@@ -13,3 +13,6 @@ ffmpeg
 bs4
 s3fs
 transformers
+wordcloud
+matplotlib
+librosa

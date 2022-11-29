@@ -8,6 +8,33 @@ import s3fs
 
 from util.config import *
 
+SQS = boto3.resource(
+    "sqs", aws_access_key_id=AWS_ACCESS_KEY, aws_secret_access_key=AWS_SECRET_ACCESS_KEY
+)
+QUEUE = SQS.get_queue_by_name(
+    QueueName="ambient-music",
+    QueueOwnerAWSAccountId=AWS_ACCOUNT_ID
+    )
+
+
+def update_to_elastic_search(buffer, id_key):
+    if len(buffer) == 0:
+        return
+
+    data = ""
+    for x in buffer:
+        data += json.dumps(x) + "\n"
+
+    headers = {"Content-Type": "application/json"}
+
+    resp = requests.post(
+        f"{ELASTICSEARCH_URL}/music_data/_doc/{x[id_key]}",
+        headers=headers,
+        data=data,
+        auth=ELASTICSEARCH_AUTH
+    )
+    print(resp.status_code)
+
 
 def upload_to_elastic_search(buffer, id_key):
     if len(buffer) == 0:
@@ -37,16 +64,6 @@ def upload_to_elastic_search(buffer, id_key):
 
 
 def push_to_aws_queue(buffer):
-    sqs = boto3.resource(
-        "sqs",
-        aws_access_key_id=AWS_ACCESS_KEY,
-        aws_secret_access_key=AWS_SECRET_ACCESS_KEY
-    )
-    queue = sqs.get_queue_by_name(
-        QueueName="ambient-music",
-        QueueOwnerAWSAccountId=AWS_ACCOUNT_ID
-    )
-
     print("Pushing to AWS SQS")
 
     temp = {x["Id"]: x for x in buffer}
@@ -54,7 +71,7 @@ def push_to_aws_queue(buffer):
 
     for idx in range(0, len(buffer), 3):  # 일단 그냥 작게 쪼갰어요
         chunk = buffer[idx:idx + 3]
-        queue.send_messages(Entries=chunk)
+        QUEUE.send_messages(Entries=chunk)
 
 
 def upload_folder_to_s3(from_local, to_s3):
