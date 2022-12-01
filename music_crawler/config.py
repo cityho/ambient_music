@@ -16,4 +16,4 @@ DOWNLOADPLAYLIST = {
     "Dark & Stormy": "https://open.spotify.com/playlist/37i9dQZF1DX2pSTOxoPbx9?si=bc97091dc6aa4993",
     "Feelin' Good": "https://open.spotify.com/playlist/37i9dQZF1DX9XIFQuFvzM4?si=e4d821d267d94e6e",
     "Mega Hit Max": "https://open.spotify.com/playlist/37i9dQZF1DXbYM3nMM0oPk"
-}
+} # 추가 희망시: 스포티파이 계정에서 링크를 만들고 그 링크와 플레이리스트 명을 여기 추가해주세요!
