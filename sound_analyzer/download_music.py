@@ -1,3 +1,4 @@
+import os
 import s3fs
 
 from util.config import *
@@ -9,5 +10,15 @@ bucket_folders = fs.ls(bucket)
 for f in bucket_folders:
     files = fs.ls(f)
     for file in files:
-        fs.download(file, file)
+        print("Test")
+        try:
+            if os.path.exists(file):
+                print(f"DOWNLOADED {file}")
+                continue
+            fs.download(file, file)
+        except:
+            import traceback
+
+            print(traceback.format_exc())
+
 

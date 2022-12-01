@@ -76,26 +76,25 @@ class LyricsSentiment():
         ]
         for w in new_stopwords:
             lyrics = [ly.replace(w, "") for ly in lyrics]
-
         if full:
-            return " ".join(lyrics)
+            return " ".join(list(set(lyrics)))
         else:
             return lyrics
 
-    def process_sentiment(self, msg, full=True):
-        body = json.loads(msg.body)
-        song_id = body['song_id']
-        song_id = "0S5EEpFAHcT7cm5XOASc29"  # 마이클잭슨 테스트
+    def process_sentiment(self, msg=None, song_id="", full=True):
+        if msg:
+            body = json.loads(msg.body)
+            song_id = body['song_id']
+        elif song_id:
+            pass
+
         resp = requests.get(
             f"{ELASTICSEARCH_URL}/music_data/_doc/{song_id}",
             headers={"Content-Type": "application/json"},
             auth=ELASTICSEARCH_AUTH
         )
         if resp.status_code != 200:
-            print("*" * 50)
-            print(body)
-            self.no_lyrics.append(body)
-            print("*" * 50)
+            self.no_lyrics.append(song_id)
 
         entry = resp.json()["_source"]
         lyrics = self._prerocess_lyrics(entry["lyrics"], full)
@@ -106,6 +105,28 @@ class LyricsSentiment():
             self._calculate_sentiment(lyrics, full)
         )
         return entry
+
+    def run_by_els(self):
+        data = json.dumps({"size": 400, "query": {"match_all": {}}})
+        resp = requests.get(
+            f"{ELASTICSEARCH_URL}/music_data/_search",
+            headers={"Content-Type": "application/json"},
+            auth=ELASTICSEARCH_AUTH,
+            data=data
+        )
+        songs = resp.json()["hits"]["hits"]
+        print("Test")
+        for s in songs:
+            print(".", end="", flush=True)
+            try:
+                entry = self.process_sentiment(song_id=s["_id"])
+            except:
+                import traceback
+                print(traceback.format_exc())
+                print(s["_id"])
+                continue
+
+            update_to_elastic_search([entry], "song_id")
 
     def run(self):
         count = 0
@@ -165,4 +186,5 @@ def parse_args():
 
 if __name__ == "__main__":
     args = parse_args()
-    LyricsSentiment(args).run()
+    # LyricsSentiment(args).run()
+    LyricsSentiment(args).run_by_els()
