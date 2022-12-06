@@ -10,6 +10,10 @@ SPOTIPY_CLIENT_ID = os.getenv('SPOTIPY_CLIENT_ID')
 SPOTIPY_CLIENT_SECRET = os.getenv('SPOTIPY_CLIENT_SECRET')
 
 DOWNLOADPLAYLIST = {
+    "Happy & Energetic" : "https://open.spotify.com/playlist/7JybuGacYxxo3yV4vsRxRg?si=0cf9921c68d84289", # HJ 추가
+    "Sadness & Calm" : "https://open.spotify.com/playlist/7yVvSMAjQfBwrEEGiur0Ki?si=d24d37a7e9264173", # HJ 추가
+    "Christmas" : "https://open.spotify.com/playlist/7JybuGacYxxo3yV4vsRxRg?si=0cf9921c68d84289", # HJ 추가
+    "Disney" : "https://open.spotify.com/playlist/6nrnG5dhXGepVAflmyA1Qu", # HJ 추가
     "This is Norah Jones": "https://open.spotify.com/playlist/37i9dQZF1DZ06evO1A8iR2",
     "This is Michael Jackson": "https://open.spotify.com/playlist/37i9dQZF1DXaTIN6XNquoW",
     "Christmas Hits": "https://open.spotify.com/playlist/37i9dQZF1DX0Yxoavh5qJV",
